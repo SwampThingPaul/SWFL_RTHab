@@ -34,3 +34,15 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+
+
+## Added by PJ
+/Data/
+/GIS/
+*README.Rmd
+
+src/_archive
+Plots/_archive
+_presentations/
+*.RdataTmp*
+*debug.log
