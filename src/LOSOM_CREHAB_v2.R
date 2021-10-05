@@ -432,34 +432,34 @@ abline(v=expanded.dates,col="red",lty=2,lwd=2)
 
 
 # Salinity ----------------------------------------------------------------
-surf.da=data.frame(depth="surface",SITE=c(rep("S79_T",2),rep("VALI75",2),rep("FORTMYERSM",4),rep("CCORAL",2),rep("MARKH",2),rep("MARKERH",2),rep("SANIB1",2)),param=c(rep(c("WT","SPC"),8)),DBKEY=c("15286","15287","UL031","UL027","PE681","PE685","88285","88289","UO833","PS985","88199","88203","15269","15271","WN366","WN368"))
-bot.da=data.frame(depth="bottom", SITE=c(rep("S79_T",2),rep("VALI75",2),rep("FORTMYERSM",4),rep("CCORAL",2),rep("MARKH",2),rep("MARKERH",2),rep("SANIB2",2)),param=c(rep(c("WT","SPC"),8)),DBKEY=c("15285","15289","UL029","UL025","PE684","PE688","88286","88290","UO831","PS984","88197","88201","15268","15270","WN374","WN376"))
-
-sal.dat=data.frame()
-for(i in 1:nrow(surf.da)){
-  tmp=DBHYDRO_daily(dates[1],dates[2],surf.da$DBKEY[i])
-  tmp$DBKEY=as.character(surf.da$DBKEY[i])
-  sal.dat=rbind(sal.dat,tmp)
-  print(i)
-}
-sal.dat=merge(sal.dat,surf.da,"DBKEY")
-sal.dat.xtab=data.frame(cast(sal.dat,Date+SITE~param,value="Data.Value",mean))
-sal.dat.xtab$Sal=with(sal.dat.xtab,SalinityCalc(SPC,WT))
-
-sal.dat.xtab2=data.frame(cast(sal.dat.xtab,Date~SITE,value="Sal",mean))
-sal.dat.xtab2=subset(sal.dat.xtab2,Date>date.fun("2006-10-01"))# VALI75 data starts 2006-10-20
-
-plot(MARKH~Date,sal.dat.xtab2)
-plot(FORTMYERSM~Date,sal.dat.xtab2)
-
-sal.dat.xtab2$est.sal.delta=with(sal.dat.xtab2,MARKH-FORTMYERSM)
-sal.dat.xtab2$month=as.numeric(format(sal.dat.xtab2$Date,"%m"))
-sal.dat.xtab2$CY=as.numeric(format(sal.dat.xtab2$Date,"%Y"))
-  
-plot(est.sal.delta~Date,sal.dat.xtab2)
-sal.dat.xtab2.mon=ddply(sal.dat.xtab2,c("CY","month"),summarise,mean.sal.delta=mean(est.sal.delta,na.rm=T),mean.FtM=mean(FORTMYERSM,na.rm=T),mean.MH=mean(MARKH,na.rm=T))
-plot(sal.dat.xtab2.mon$mean.sal.delta)
-plot(sal.dat.xtab2.mon$mean.FtM)
+# surf.da=data.frame(depth="surface",SITE=c(rep("S79_T",2),rep("VALI75",2),rep("FORTMYERSM",4),rep("CCORAL",2),rep("MARKH",2),rep("MARKERH",2),rep("SANIB1",2)),param=c(rep(c("WT","SPC"),8)),DBKEY=c("15286","15287","UL031","UL027","PE681","PE685","88285","88289","UO833","PS985","88199","88203","15269","15271","WN366","WN368"))
+# bot.da=data.frame(depth="bottom", SITE=c(rep("S79_T",2),rep("VALI75",2),rep("FORTMYERSM",4),rep("CCORAL",2),rep("MARKH",2),rep("MARKERH",2),rep("SANIB2",2)),param=c(rep(c("WT","SPC"),8)),DBKEY=c("15285","15289","UL029","UL025","PE684","PE688","88286","88290","UO831","PS984","88197","88201","15268","15270","WN374","WN376"))
+# 
+# sal.dat=data.frame()
+# for(i in 1:nrow(surf.da)){
+#   tmp=DBHYDRO_daily(dates[1],dates[2],surf.da$DBKEY[i])
+#   tmp$DBKEY=as.character(surf.da$DBKEY[i])
+#   sal.dat=rbind(sal.dat,tmp)
+#   print(i)
+# }
+# sal.dat=merge(sal.dat,surf.da,"DBKEY")
+# sal.dat.xtab=data.frame(cast(sal.dat,Date+SITE~param,value="Data.Value",mean))
+# sal.dat.xtab$Sal=with(sal.dat.xtab,SalinityCalc(SPC,WT))
+# 
+# sal.dat.xtab2=data.frame(cast(sal.dat.xtab,Date~SITE,value="Sal",mean))
+# sal.dat.xtab2=subset(sal.dat.xtab2,Date>date.fun("2006-10-01"))# VALI75 data starts 2006-10-20
+# 
+# plot(MARKH~Date,sal.dat.xtab2)
+# plot(FORTMYERSM~Date,sal.dat.xtab2)
+# 
+# sal.dat.xtab2$est.sal.delta=with(sal.dat.xtab2,MARKH-FORTMYERSM)
+# sal.dat.xtab2$month=as.numeric(format(sal.dat.xtab2$Date,"%m"))
+# sal.dat.xtab2$CY=as.numeric(format(sal.dat.xtab2$Date,"%Y"))
+#   
+# plot(est.sal.delta~Date,sal.dat.xtab2)
+# sal.dat.xtab2.mon=ddply(sal.dat.xtab2,c("CY","month"),summarise,mean.sal.delta=mean(est.sal.delta,na.rm=T),mean.FtM=mean(FORTMYERSM,na.rm=T),mean.MH=mean(MARKH,na.rm=T))
+# plot(sal.dat.xtab2.mon$mean.sal.delta)
+# plot(sal.dat.xtab2.mon$mean.FtM)
 
 # -------------------------------------------------------------------------
 exp.hab=subset(hab.dat2,date>=expanded.dates[1]&date<expanded.dates[2])
@@ -519,6 +519,7 @@ tr.index=sample(1:nrow(exp.hab.month),nrow(exp.hab.month)*0.7)
 # m1 <- gam(log10.mean~s(month,bs="cc",k=12)+s(DY,bs="tp")+ti(month,DY,bs=c("cc","tp")),
 #           data=exp.hab.month[tr.index,], method = 'REML')
 
+# m1 ----------------------------------------------------------------------
 m1 <- gam(log10.mean~
             s(DoY,bs="cc",k=10)+
             s(CY,bs="tp",k=7)+
@@ -526,9 +527,21 @@ m1 <- gam(log10.mean~
           data=exp.hab.month[tr.index,], method = 'REML',knots=list(DoY=c(10,365.5)))
 
 
+summary(m1)
+nvar=3;layout(matrix(1:nvar,1,nvar))
+plot(m1,residuals=T,pch=21)
+dev.off()
 
+nvar=4;layout(matrix(1:nvar,1,nvar))
+gam.check(m1)
+dev.off()
+
+shapiro.test(m1$residuals)
+acf(m1$residuals)
+
+draw(m1)
 pdat=with(exp.hab.month,expand.grid(DoY=seq(min(DoY,na.rm=T),max(DoY,na.rm=T),0.25),
-                                     CY=seq(min(CY,na.rm=T),max(CY,na.rm=T),0.25)))
+                                    CY=seq(min(CY,na.rm=T),max(CY,na.rm=T),0.25)))
 
 p.m1=predict(m1,newdata=pdat,type="terms",se=T)
 pdat$fit.DoY=p.m1$fit[,1]
@@ -548,6 +561,15 @@ pdat <- transform(pdat,
 
 pred.org=predict(m1,type="terms")
 partial.resids<-pred.org+residuals(m1)
+
+hist(partial.resids[,1])
+shapiro.test(partial.resids[,1])
+
+hist(partial.resids[,2])
+shapiro.test(partial.resids[,2])
+
+hist(partial.resids[,3])
+shapiro.test(partial.resids[,3])
 
 # par(family="serif",mar=c(1,4,0.25,0.25),oma=c(1.75,2,0.75,0.5));
 # layout(matrix(1:2,2,1))
@@ -595,19 +617,6 @@ partial.resids<-pred.org+residuals(m1)
 # mtext(side=1,line=2.25,"DoY")
 # mtext(side=2,line=3,"Year")
 
-draw(m1)
-
-summary(m1)
-nvar=3;layout(matrix(1:nvar,1,nvar))
-plot(m1,residuals=T,pch=21)
-dev.off()
-
-nvar=4;layout(matrix(1:nvar,1,nvar))
-gam.check(m1)
-dev.off()
-
-shapiro.test(m1$residuals)
-acf(m1$residuals)
 
 plot(exp.hab.month$log10.mean,type="b")
 
@@ -654,7 +663,7 @@ mtext(side=1,line=2,"DoY")
 mtext(side=2,line=2,"Effect")
 
 ylim.val=c(-4,7);by.y=2;ymaj=seq(ylim.val[1],ylim.val[2],by.y);ymin=seq(ylim.val[1],ylim.val[2],by.y/2)
-xlim.val=c(2012,2016);by.x=2;xmaj=seq(xlim.val[1],xlim.val[2],by.x);xmin=seq(xlim.val[1],xlim.val[2],by.x/2)
+xlim.val=c(2012,2018);by.x=2;xmaj=seq(xlim.val[1],xlim.val[2],by.x);xmin=seq(xlim.val[1],xlim.val[2],by.x/2)
 pdat=pdat[order(pdat$CY,pdat$DoY),]
 plot(fit.CY~CY,pdat,ylim=ylim.val,xlim=xlim.val,ann=F,axes=F,type="n")
 abline(h=ymaj,v=xmaj,lty=3,col="grey")
@@ -806,6 +815,7 @@ mod.est.m1$model="m1"
 # m2 <- gam(log10.mean~s(month,bs="cc",k=12)+s(DY)+s(S79)+ti(month,DY,bs=c("cc","tp")),
 #           data=exp.hab.month[tr.index,], method = 'REML')
 
+# m2 ----------------------------------------------------------------------
 m2 <- gam(log10.mean~s(DoY,bs="cc",k=12)+s(CY,bs="tp",k=7)+s(S79)+ti(DoY,CY,bs=c("cc","tp")),
           data=exp.hab.month[tr.index,], method = 'REML',knots=list(DoY=c(10,350)))
 summary(m2)
@@ -872,6 +882,19 @@ pdat2 <- transform(pdat2,
 pred.org=predict(m2,type="terms")
 partial.resids<-pred.org+residuals(m2)
 
+hist(partial.resids[,1])
+shapiro.test(partial.resids[,1])
+
+hist(partial.resids[,2])
+shapiro.test(partial.resids[,2])
+
+hist(partial.resids[,3])
+shapiro.test(partial.resids[,3])
+
+hist(partial.resids[,4])
+shapiro.test(partial.resids[,4])
+
+
 # png(filename=paste0(plot.path,"GAM_m2_draw_base.png"),width=8,height=2,units="in",res=200,type="windows",bg="white")
 par(family="serif",mar=c(2,3,1,1.5),oma=c(2,1,0.5,0.25));
 layout(matrix(1:5,1,5),widths=c(1,1,1,1,0.5))
@@ -890,7 +913,7 @@ mtext(side=1,line=2,"DoY")
 mtext(side=2,line=2,"Effect")
 
 ylim.val=c(-4,7);by.y=2;ymaj=seq(ylim.val[1],ylim.val[2],by.y);ymin=seq(ylim.val[1],ylim.val[2],by.y/2)
-xlim.val=c(2012,2016);by.x=2;xmaj=seq(xlim.val[1],xlim.val[2],by.x);xmin=seq(xlim.val[1],xlim.val[2],by.x/2)
+xlim.val=c(2012,2018);by.x=2;xmaj=seq(xlim.val[1],xlim.val[2],by.x);xmin=seq(xlim.val[1],xlim.val[2],by.x/2)
 pdat2=pdat2[order(pdat2$CY,pdat2$DoY),]
 plot(fit.CY~CY,pdat2,ylim=ylim.val,xlim=xlim.val,ann=F,axes=F,type="n")
 abline(h=ymaj,v=xmaj,lty=3,col="grey")
@@ -909,16 +932,15 @@ plot(fit.S79~S79,pdat2,ylim=ylim.val,xlim=xlim.val,ann=F,axes=F,type="n")
 abline(h=ymaj,v=xmaj,lty=3,col="grey")
 with(pdat2,shaded.range(S79,S79.LCI,S79.UCI,"grey",lty=1))
 points(m2$model$S79,partial.resids[,3],pch=19,col=adjustcolor("dodgerblue1",0.5))
-lines(fit.S79~S79,pdat,lwd=2)
+lines(fit.S79~S79,pdat2,lwd=2)
 axis_fun(1,xmaj,xmin,xmaj/10e2,line=-0.5);axis_fun(2,ymaj,ymin,ymaj);box(lwd=1)
 mtext(side=3,adj=0,expression(paste("s(Q"["S79"],")")))
 mtext(side=1,line=2,expression(paste("Q"["S79"]," (x1000 cfs)")))
 mtext(side=2,line=2,"Effect")
 
-
 ylim.val=c(2012,2018);by.y=2;ymaj=seq(ylim.val[1],ylim.val[2],by.y);ymin=seq(ylim.val[1],ylim.val[2],by.y/2);ylen=length(ymaj)
 xlim.val=c(0,365);by.x=90;xmaj=seq(xlim.val[1],xlim.val[2],by.x);xmin=seq(xlim.val[1],xlim.val[2],by.x/2);xlen=length(xmaj)
-tmp.ma1=with(pdat2,matrix(fit.DoYCY,ncol=length(unique(pdat$CY)),nrow=length(unique(pdat$DoY))))
+tmp.ma1=with(pdat2,matrix(fit.DoYCY,ncol=length(unique(pdat2$CY)),nrow=length(unique(pdat2$DoY))))
 brk=50
 breaks.val=classIntervals(pdat2$fit.DoYCY,style="equal",n=brk)
 pal=hcl.colors(n=brk,alpha=0.75)
@@ -1094,6 +1116,7 @@ subset(pdat2,is.na(dsig.decr)==F)$S79
 # m3 <- gam(log10.mean~s(month,bs="cc",k=12)+s(DY)+s(mean.stg)+ti(month,DY,bs=c("cc","tp")),
 #           data=exp.hab.month[tr.index,], method = 'REML')
 
+# m3 ----------------------------------------------------------------------
 m3 <- gam(log10.mean~s(DoY,bs="cc",k=12)+s(CY,bs="tp",k=7)+s(mean.stg)+ti(DoY,CY,bs=c("cc","tp")),
           data=exp.hab.month[tr.index,], method = 'REML',knots=list(DoY=c(10,350)))
 
@@ -1160,6 +1183,19 @@ pdat3 <- transform(pdat3,
 pred.org=predict(m3,type="terms")
 partial.resids<-pred.org+residuals(m3)
 
+hist(partial.resids[,1])
+shapiro.test(partial.resids[,1])
+
+hist(partial.resids[,2])
+shapiro.test(partial.resids[,2])
+
+hist(partial.resids[,3])
+shapiro.test(partial.resids[,3])
+
+hist(partial.resids[,4])
+shapiro.test(partial.resids[,4])
+
+
 # png(filename=paste0(plot.path,"GAM_m3_draw_base.png"),width=8,height=2,units="in",res=200,type="windows",bg="white")
 par(family="serif",mar=c(2,3,1,1.5),oma=c(2,1,0.5,0.25));
 layout(matrix(1:5,1,5),widths=c(1,1,1,1,0.5))
@@ -1178,7 +1214,7 @@ mtext(side=1,line=2,"DoY")
 mtext(side=2,line=2,"Effect")
 
 ylim.val=c(-4,7);by.y=2;ymaj=seq(ylim.val[1],ylim.val[2],by.y);ymin=seq(ylim.val[1],ylim.val[2],by.y/2)
-xlim.val=c(2012,2016);by.x=2;xmaj=seq(xlim.val[1],xlim.val[2],by.x);xmin=seq(xlim.val[1],xlim.val[2],by.x/2)
+xlim.val=c(2012,2018);by.x=2;xmaj=seq(xlim.val[1],xlim.val[2],by.x);xmin=seq(xlim.val[1],xlim.val[2],by.x/2)
 pdat3=pdat3[order(pdat3$CY,pdat3$DoY),]
 plot(fit.CY~CY,pdat3,ylim=ylim.val,xlim=xlim.val,ann=F,axes=F,type="n")
 abline(h=ymaj,v=xmaj,lty=3,col="grey")
@@ -1533,283 +1569,4 @@ legend(0.5,-0.25,legend=leg.text,
        pt.cex=1,ncol=1,cex=0.8,bty="n",y.intersp=1,x.intersp=0.75,xpd=NA,xjust=0.5,yjust=0.5)
 
 dev.off()
-
-
-# Models for RSM ----------------------------------------------------------
-rsm.por.month=data.frame(date=seq(date.fun("1965-05-01"),date.fun("2016-05-01"),"1 months"))
-rsm.por.month$CY=as.numeric(format(rsm.por.month$date,"%Y"))
-rsm.por.month$month=as.numeric(format(rsm.por.month$date,"%m"))
-rsm.por.month$rec=1
-rsm.por.month$rec[1]=rsm.por.month$month[1]
-rsm.por.month$c.month=cumsum(rsm.por.month$rec)
-rsm.por.month=rsm.por.month[,c("CY","month","c.month")]
-
-exp.hab.month2=merge(exp.hab.month[,names(exp.hab.month)[!(names(exp.hab.month)%in%c("c.month"))]],
-                     rsm.por.month,c("CY","month"),all.x=T)
-
-m1.a <- gam(log10.mean~s(month,bs="cc",k=12)+s(c.month,bs="cr"),
-          data=exp.hab.month2[tr.index,], method = 'REML')
-summary(m1.a)
-gam.check(m1.a)
-shapiro.test(residuals(m1.a))
-
-draw(m1.a)
-draw(penalty(m1.a))
-
-plot(exp.hab.month$log10.mean,type="b",ylim=c(0,10))
-m1.a.pred=exp.hab.month2
-m1.a.pred=cbind(m1.a.pred,data.frame(predict(m1.a,m1.a.pred,se.fit=T)))
-m1.a.pred$upr=with(m1.a.pred, fit + (2*se.fit))
-m1.a.pred$lwr=with(m1.a.pred, fit - (2*se.fit))
-lines(m.pred$fit,col="Red")
-
-m1.a.pred=rsm.por.month
-m1.a.pred=cbind(m1.a.pred,data.frame(predict(m1.a,rsm.por.month,se.fit=T)))
-m1.a.pred$upr=with(m1.a.pred, fit + (2*se.fit))
-m1.a.pred$lwr=with(m1.a.pred, fit - (2*se.fit))
-plot(m1.a.pred$fit,type="b")
-
-### 
-exp.hab.month=merge(exp.hab.month,sal.dat.xtab2.mon,c("CY","month"),all.x=T)
-
-knots.val=list(mean.stg=c(12,16.5))
-m5=gam(log10.mean~s(S79)+s(mean.stg)+ti(S79,mean.stg),
-       data=exp.hab.month[tr.index,], method = 'REML')
-
-summary(m5)
-nvar=4;layout(matrix(1:nvar,1,nvar))
-gam.check(m5)
-shapiro.test(residuals(m5))
-
-nvar=3;layout(matrix(1:nvar,1,nvar))
-plot(m5,residuals=T,pch=21)
-
-draw(m5)
-
-
-m5a=gam(log10.mean~s(S79,bs="tp",k=5)+s(mean.stg,bs="tp",k=8)+ti(S79,mean.stg,bs=c("tp","tp"),k=c(5,8)),
-        data=exp.hab.month[tr.index,], method = 'REML')
-m5b=gam(log10.mean~s(S79,bs="tp")+s(S77)+s(mean.stg,bs="tp",k=9)+ti(S79,mean.stg,bs=c("cc","tp")),
-        data=exp.hab.month[tr.index,], method = 'REML')
-
-
-Q.k=5
-stg.k=8
-time.k=11
-m5c=gam(log10.mean~
-          s(S79,bs="tp",k=Q.k)+
-          s(mean.stg,bs="tp",k=stg.k)+
-          s(DoY,bs="cr",k=time.k)+
-          ti(S79,mean.stg,bs=c("tp","tp"),k=c(Q.k,stg.k)),
-        data=exp.hab.month[tr.index,], method = 'REML')
-
-AIC(m5,m5a,m5b)
-
-summary(m5a)
-nvar=4;layout(matrix(1:nvar,1,nvar))
-gam.check(m5a)
-shapiro.test(residuals(m5a))
-
-nvar=3;layout(matrix(1:nvar,1,nvar))
-plot(m5a,residuals=T,pch=21)
-
-draw(m5a)
-
-summary(m5c)
-nvar=4;layout(matrix(1:nvar,1,nvar))
-gam.check(m5c)
-plot(m5c)
-shapiro.test(residuals(m5c))
-draw(m5c)
-
-dev.off()
-plot(exp.hab.month$log10.mean,type="b",ylim=c(0,10))
-m5a.pred=exp.hab.month
-m5a.pred=cbind(m5a.pred,data.frame(predict(m5a,m5a.pred,se.fit=T)))
-m5a.pred$upr=with(m5a.pred, fit + (2*se.fit))
-m5a.pred$lwr=with(m5a.pred, fit - (2*se.fit))
-lines(m5a.pred$fit,col="Red")
-
-m5c.pred=exp.hab.month
-m5c.pred=cbind(m5c.pred,data.frame(predict(m5c,m5c.pred,se.fit=T)))
-m5c.pred$upr=with(m5c.pred, fit + (2*se.fit))
-m5c.pred$lwr=with(m5c.pred, fit - (2*se.fit))
-lines(m5c.pred$fit,col="green")
-
-
-mod.pred=predict(m5c,exp.hab.month[-tr.index,])
-actuals_preds <-data.frame(cbind(actuals=exp.hab.month[-tr.index,"log10.mean"],predicted=mod.pred))
-plot(actuals~predicted,actuals_preds);abline(0,1)
-cor.test(actuals_preds$actuals,actuals_preds$predicted,method="spearman")
-
-# Nash-Sutcliffe model efficiency coefficient
-with(actuals_preds,1-(sum((actuals-predicted)^2)/sum((actuals-mean(actuals))^2)))
-# Kling-Gupta Efficiency
-r.val=with(actuals_preds,cor(predicted,actuals,method="pearson"))
-alpha.val=with(actuals_preds,sd(predicted)/sd(actuals))
-beta.val=with(actuals_preds,mean(predicted)/mean(actuals))
-1-sqrt((r.val-1)^2 + (alpha.val-1)^2 + (beta.val-1)^2)
-
-
-plot(S79~mean.sal.delta,exp.hab.month)
-plot(S79~mean.stg,exp.hab.month)
-plot(mean.stg~mean.sal.delta,exp.hab.month)
-plot(S79~mean.MH,exp.hab.month)
-plot(mean.stg~mean.MH,exp.hab.month)
-
-m5d=gam(log10.mean~
-          s(S79,bs="tp",k=5)+
-          s(mean.stg,bs="tp",k=8)+
-          s(mean.sal.delta,bs="cc",k=5)+
-          ti(S79,mean.stg,bs=c("tp","tp"),k=c(5,8)),
-        data=exp.hab.month[tr.index,], method = 'REML')
-summary(m5d)
-nvar=4;layout(matrix(1:nvar,1,nvar))
-plot(m5d,residuals=T,pch=21)
-
-nvar=4;layout(matrix(1:nvar,1,nvar))
-gam.check(m5d)
-shapiro.test(residuals(m5d))
-draw(m5d)
-
-mod.pred=predict(m5d,exp.hab.month[-tr.index,])
-actuals_preds <-data.frame(cbind(actuals=exp.hab.month[-tr.index,"log10.mean"],predicted=mod.pred))
-plot(actuals~predicted,actuals_preds);abline(0,1)
-cor.test(actuals_preds$actuals,actuals_preds$predicted,method="spearman")
-
-# Nash-Sutcliffe model efficiency coefficient
-with(actuals_preds,1-(sum((actuals-predicted)^2)/sum((actuals-mean(actuals))^2)))
-# Kling-Gupta Efficiency
-r.val=with(actuals_preds,cor(predicted,actuals,method="pearson"))
-alpha.val=with(actuals_preds,sd(predicted)/sd(actuals))
-beta.val=with(actuals_preds,mean(predicted)/mean(actuals))
-1-sqrt((r.val-1)^2 + (alpha.val-1)^2 + (beta.val-1)^2)
-
-# RSM ---------------------------------------------------------------------
-library(dssrip)
-rsm.path=paste0(dirname(wd),"/LOSOM_ENLM/Data/RSMBN")
-
-dss_out=opendss(paste0(rsm.path,"/pro_19652016_LORS08/RSMBN_output.dss"))
-paths=paste0("/RSMBN/LOK/STAGE/01JAN1965 - 01JAN2016/1DAY/SIMULATED/")
-# RSM.lakeO.stg=data.frame(getFullTSC(dss_out,paths))
-# RSM.lakeO.stg$Date=date.fun(rownames(RSM.lakeO.stg))
-
-paths=paste0("/RSMBN/S79/FLOW/01JAN1965 - 01JAN2016/1DAY/SIMULATED/")  
-RSM.q.cre.dat=data.frame(getFullTSC(dss_out,paths))
-RSM.q.cre.dat$Date=date.fun(rownames(RSM.q.cre.dat))
-RSM.q.cre.dat$SITE="S79"
-RSM.q.cre.dat$month=as.numeric(format(RSM.q.cre.dat$Date,"%m"))
-RSM.q.cre.dat$CY=as.numeric(format(RSM.q.cre.dat$Date,"%Y"))
-RSM.q.cre.dat$WY=WY(RSM.q.cre.dat$Date)
-
-RSM.q.cre.dat.mon=ddply(RSM.q.cre.dat,c("CY","month","WY"),summarise,S79=sum(FLOW,na.rm=T))
-RSM.q.cre.dat.mon=subset(RSM.q.cre.dat.mon,WY%in%seq(1966,2016,1))
-RSM.q.cre.dat.mon$Date.monCY=with(RSM.q.cre.dat.mon,date.fun(paste(CY,month,"01",sep="-")))
-RSM.q.cre.dat.mon$DoY=as.numeric(format(RSM.q.cre.dat.mon$Date.monCY,"%j"))
-# RSM.q.cre.dat.mon$DY=with(RSM.q.cre.dat.mon,lubridate::decimal_date(Date.monCY))
-RSM.q.cre.dat.mon$time=with(RSM.q.cre.dat.mon,as.numeric(Date.monCY)/1000)
-# RSM.q.cre.dat.mon$DY=with(RSM.q.cre.dat.mon,lubridate::decimal_date(date.fun("1965-05-01"))-lubridate::decimal_date(Date.monCY))
-head(RSM.q.cre.dat.mon)
-
-paths=paste0("/RSMBN/LOK/STAGE/01JAN1965 - 01JAN2016/1DAY/SIMULATED/")
-RSM.lakeO.stg=data.frame(getFullTSC(dss_out,paths))
-RSM.lakeO.stg$Date=date.fun(rownames(RSM.lakeO.stg))
-RSM.lakeO.stg$WY=WY(RSM.lakeO.stg$Date)
-RSM.lakeO.stg$month=as.numeric(format(RSM.lakeO.stg$Date,"%m"))
-RSM.lakeO.stg$CY=as.numeric(format(RSM.lakeO.stg$Date,"%Y"))
-RSM.lakeO.stg$monCY=with(RSM.lakeO.stg,date.fun(paste(CY,month,"01",sep="-")))
-
-RSM.lakeO.stg=ddply(RSM.lakeO.stg,c("CY","month","WY"),summarise,
-                    mean.stg=mean(STAGE,na.rm=T))
-
-RSM.q.cre.dat.mon=merge(RSM.q.cre.dat.mon,RSM.lakeO.stg,c("CY","month","WY"))
-RSM.q.cre.dat.mon=RSM.q.cre.dat.mon[order(RSM.q.cre.dat.mon$Date.monCY),]
-
-str(exp.hab.month)
-str(RSM.q.cre.dat.mon)
-
-plot(S79~Date.monCY,RSM.q.cre.dat.mon,type="l")
-with(exp.hab.month,lines(date.monCY,S79,col="red"))
-
-# ctrl <- list(niterEM = 0, msVerbose = TRUE, optimMethod="L-BFGS-B")
-# m2 <- gamm(log10.mean~s(month,bs="cc",k=12)+s(time,k=20)+s(S79),
-# data=exp.hab.month[tr.index,], method = 'REML',correlation = corARMA(form = ~ 1|CY, p = 2), control = ctrl)
-# summary(m2$gam)
-
-# m1 <- gam(log10.mean~s(DoY,bs="cc",k=12),
-#           data=exp.hab.month[tr.index,], method = 'REML')
-# summary(m1)
-# 
-# m2.pred.rsm=RSM.q.cre.dat.mon
-# m2.pred.rsm=cbind(m2.pred.rsm,predict(m1,m2.pred.rsm,se=T))
-
-m.pred=RSM.q.cre.dat.mon
-m.pred=cbind(m.pred,data.frame(predict(m5a,m.pred,se.fit=T)))
-m.pred$upr=with(m.pred, fit + (2*se.fit))
-m.pred$lwr=with(m.pred, fit - (2*se.fit))
-
-m.pred$fit=with(m.pred,ifelse(fit<0,0,fit))
-
-plot(fit~Date.monCY,m.pred,type="b",ylim=c(0,10))
-
-
-# png(filename=paste0(plot.path,"GAM_obs_scenario.png"),width=7,height=5,units="in",res=200,type="windows",bg="white")
-par(family="serif",mar=c(2.5,4,0.25,0.25),oma=c(1.75,2,0.75,0.5));
-layout(matrix(1:2,2,1))
-
-ylim.val=c(0,7);by.y=1;ymaj=seq(ylim.val[1],ylim.val[2],by.y);ymin=seq(ylim.val[1],ylim.val[2],by.y/2)
-xlim.val=expanded.dates;xmaj=seq(xlim.val[1],xlim.val[2],"1 years");xmin=seq(xlim.val[1],xlim.val[2],"6 months")
-plot(log10.mean~min.date,exp.hab.month,ylim=ylim.val,xlim=xlim.val,type="n",axes=F,ylab=NA,xlab=NA)
-abline(h=ymaj,v=xmaj,lty=3,col="grey")
-with(exp.hab.month,lines(min.date,log10.mean,lwd=2))
-with(exp.hab.month,points(min.date,log10.mean,pch=19))
-with(m.pred,shaded.range(exp.hab.month$date.monCY,m.pred$upr,m.pred$lwr,bg="red",lty=0))
-with(m.pred,lines(date.monCY,fit,col=adjustcolor("red",0.5),lwd=4))
-axis_fun(1,xmaj,xmin,format(xmaj,"%m-%Y"),line=-0.5)
-axis_fun(2,ymaj,ymaj,format(c(0,10^(ymaj[2:8])),scientific = F));box(lwd=1)
-mtext(side=2,line=3.75,expression(paste(italic("K. brevis")," (cells L"^"-1",")")))
-mtext(side=3,adj=0,"Observed vs Predicted")
-
-ylim.val=c(0,7);by.y=1;ymaj=seq(ylim.val[1],ylim.val[2],by.y);ymin=seq(ylim.val[1],ylim.val[2],by.y/2)
-xlim.val=date.fun(c("1965-05-01","2018-10-01"));xmaj=seq(xlim.val[1],xlim.val[2],"10 years");xmin=seq(xlim.val[1],xlim.val[2],"1 years")
-plot(fit~Date.monCY,m2.pred.rsm,ylim=ylim.val,xlim=xlim.val,type="n",axes=F,ylab=NA,xlab=NA)
-abline(h=ymaj,v=xmaj,lty=3,col="grey")
-xx=c(expanded.dates[1],expanded.dates[1],expanded.dates[2],expanded.dates[2])
-yy=c(-1,10,10,-1)
-polygon(xx,yy,col=adjustcolor("grey",0.5),lty=0)
-#text(date.fun("2015-10-01"),7,"Model Fit Period",font=3)
-with(m2.pred.rsm,lines(Date.monCY,fit,col="dodgerblue1",lwd=2))
-axis_fun(1,xmaj,xmin,format(xmaj,"%m-%Y"),line=-0.5)
-axis_fun(2,ymaj,ymaj,format(c(0,10^(ymaj[2:8])),scientific = F));box(lwd=1)
-mtext(side=2,line=3.75,expression(paste(italic("K. brevis")," (cells L"^"-1",")")))
-mtext(side=1,line=1.75,"Date (Month-Year)")
-mtext(side=3,adj=0,"Scenario")
-mtext(side=3,adj=0,line=-1,paste0(" Model: ",formula(m1)[2]," ~ ",formula(m1)[3]),font=3,cex=0.6)
-dev.off()
-
-
-### 
-m5 <- gam(log10.mean~s(month,bs="cc",k=12)+s(c.month,bs="cr"),
-          data=exp.hab.month[tr.index,], method = 'REML')
-summary(m5)
-
-gam.check(m5)
-
-nr <- nrow(exp.hab.month)
-pd2 <- with(exp.hab.month, data.frame(c.month = 1:(nr),
-                             month = rep(c(10:12,1:9), length.out=nr)))
-pd2 <- cbind(pd2, predict(m5, pd2, se = TRUE))
-pd2 <- transform(pd2, upr = fit + (2*se.fit), lwr = fit - (2 * se.fit))
-
-ggplot(pd2, aes(x = c.month, y = fit)) +
-  geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.2) +
-  geom_line(data = exp.hab.month, aes(c.month, log10.mean), col = 'red') +
-  geom_line(alpha = 0.5)
-
-plot(exp.hab.month$log10.mean,type="b",ylim=c(0,10))
-m.pred=exp.hab.month
-m.pred=cbind(m.pred,data.frame(predict(m5,exp.hab.month,se.fit=T)))
-m.pred$upr=with(m.pred, fit + (2*se.fit))
-m.pred$lwr=with(m.pred, fit - (2*se.fit))
-lines(m.pred$fit,col="Red")
 
